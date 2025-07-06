@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useCustomers } from "@/contexts/CustomerContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -152,6 +154,8 @@ const ResourceStatus = ({
 export function MonitoringDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedCustomer, setSelectedCustomer] = useState("all");
+  const navigate = useNavigate();
+  const { customers } = useCustomers();
 
   const resources = [
     {
@@ -202,10 +206,11 @@ export function MonitoringDashboard() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Customers</SelectItem>
-              <SelectItem value="techcorp">TechCorp Inc</SelectItem>
-              <SelectItem value="digital">Digital Solutions</SelectItem>
-              <SelectItem value="cloudtech">CloudTech Ltd</SelectItem>
-              <SelectItem value="startup">StartupHub</SelectItem>
+              {customers.map((customer) => (
+                <SelectItem key={customer.id} value={customer.id}>
+                  {customer.company}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Button variant="outline" size="sm">
@@ -397,98 +402,52 @@ export function MonitoringDashboard() {
 
         <TabsContent value="customers" className="space-y-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <UserCheck className="w-5 h-5" />
-                  TechCorp Inc
-                </CardTitle>
-                <CardDescription>
-                  15 resources monitored
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Uptime</span>
-                    <Badge variant="success">99.9%</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Active Alerts</span>
-                    <Badge variant="warning">2</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Response Time</span>
-                    <span className="text-sm font-medium">187ms</span>
-                  </div>
-                </div>
-                <Button variant="outline" className="w-full mt-4" size="sm">
-                  View Details
-                </Button>
-              </CardContent>
-            </Card>
+            {customers.map((customer) => {
+              const totalResources = Object.values(customer.cloudIntegrations || {}).reduce((sum, integration) => {
+                return sum + ((integration as any)?.resources || (integration as any)?.servers || 0);
+              }, 0);
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <UserCheck className="w-5 h-5" />
-                  Digital Solutions
-                </CardTitle>
-                <CardDescription>
-                  23 resources monitored
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Uptime</span>
-                    <Badge variant="success">99.8%</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Active Alerts</span>
-                    <Badge variant="success">0</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Response Time</span>
-                    <span className="text-sm font-medium">134ms</span>
-                  </div>
-                </div>
-                <Button variant="outline" className="w-full mt-4" size="sm">
-                  View Details
-                </Button>
-              </CardContent>
-            </Card>
+              const totalSpend = Object.values(customer.cloudIntegrations || {}).reduce((sum, integration) => {
+                return sum + ((integration as any)?.monthlySpend || 0);
+              }, 0);
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <UserCheck className="w-5 h-5" />
-                  CloudTech Ltd
-                </CardTitle>
-                <CardDescription>
-                  8 resources monitored
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Uptime</span>
-                    <Badge variant="warning">98.5%</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Active Alerts</span>
-                    <Badge variant="destructive">5</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Response Time</span>
-                    <span className="text-sm font-medium">312ms</span>
-                  </div>
-                </div>
-                <Button variant="outline" className="w-full mt-4" size="sm">
-                  View Details
-                </Button>
-              </CardContent>
-            </Card>
+              return (
+                <Card key={customer.id} className="hover:shadow-card-hover transition-all duration-200 cursor-pointer"
+                      onClick={() => navigate(`/monitoring/customer/${customer.id}`)}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserCheck className="w-5 h-5" />
+                      {customer.company}
+                    </CardTitle>
+                    <CardDescription>
+                      {totalResources} resources monitored
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">Uptime</span>
+                        <Badge variant="success">99.9%</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">Monthly Spend</span>
+                        <span className="text-sm font-medium">${totalSpend.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">Status</span>
+                        <Badge variant={customer.status === 'active' ? 'success' : 
+                                       customer.status === 'pending' ? 'warning' : 'secondary'}>
+                          {customer.status}
+                        </Badge>
+                      </div>
+                    </div>
+                    <Button variant="outline" className="w-full mt-4" size="sm">
+                      View Details
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </TabsContent>
 

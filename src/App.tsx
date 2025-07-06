@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CustomerProvider } from "@/contexts/CustomerContext";
 import Index from "./pages/Index";
 import Monitoring from "./pages/Monitoring";
 import Tickets from "./pages/Tickets";
@@ -22,18 +23,23 @@ import Analytics from "./pages/Analytics";
 import Automation from "./pages/Automation";
 import Users from "./pages/Users";
 import Security from "./pages/Security";
+import { CustomerDetails } from "./components/monitoring/CustomerDetails";
+import { CloudProviderDetails } from "./components/monitoring/CloudProviderDetails";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+    <CustomerProvider>
+      <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/monitoring" element={<Monitoring />} />
+          <Route path="/monitoring/customer/:customerId" element={<CustomerDetails />} />
+          <Route path="/monitoring/cloud/:provider" element={<CloudProviderDetails />} />
           <Route path="/tickets" element={<Tickets />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/settings" element={<Settings />} />
@@ -67,6 +73,7 @@ const App = () => (
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
+    </CustomerProvider>
   </QueryClientProvider>
 );
 

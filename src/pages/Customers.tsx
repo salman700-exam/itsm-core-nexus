@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
+import { useCustomers } from "@/contexts/CustomerContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -103,45 +104,7 @@ const CustomerCard = ({
 
 const Customers = () => {
   const [searchTerm, setSearchTerm] = useState("");
-
-  const customers = [
-    {
-      name: "John Smith",
-      company: "TechCorp Inc",
-      email: "john.smith@techcorp.com",
-      phone: "+1 (555) 123-4567",
-      location: "New York, NY",
-      status: "active" as const,
-      joinDate: "Jan 2024"
-    },
-    {
-      name: "Sarah Johnson",
-      company: "Digital Solutions",
-      email: "sarah@digitalsol.com",
-      phone: "+1 (555) 987-6543",
-      location: "San Francisco, CA",
-      status: "active" as const,
-      joinDate: "Feb 2024"
-    },
-    {
-      name: "Mike Davis",
-      company: "CloudTech Ltd",
-      email: "mike.davis@cloudtech.com",
-      phone: "+1 (555) 456-7890",
-      location: "Austin, TX",
-      status: "pending" as const,
-      joinDate: "Mar 2024"
-    },
-    {
-      name: "Emily Wilson",
-      company: "StartupHub",
-      email: "emily@startuphub.io",
-      phone: "+1 (555) 321-0987",
-      location: "Seattle, WA",
-      status: "inactive" as const,
-      joinDate: "Dec 2023"
-    }
-  ];
+  const { customers } = useCustomers();
 
   return (
     <Layout>

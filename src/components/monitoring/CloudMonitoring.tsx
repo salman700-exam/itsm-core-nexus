@@ -1,6 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { useCustomers } from "@/contexts/CustomerContext";
 import { Progress } from "@/components/ui/progress";
 import { 
   Cloud, 
@@ -169,6 +171,26 @@ const BusinessUnit = ({
 };
 
 export function CloudMonitoring() {
+  const navigate = useNavigate();
+  const { getCustomersByCloudProvider } = useCustomers();
+
+  const awsCustomers = getCustomersByCloudProvider('aws');
+  const azureCustomers = getCustomersByCloudProvider('azure');
+  const gcpCustomers = getCustomersByCloudProvider('gcp');
+
+  const getTotalResources = (customers: any[], provider: string) => {
+    return customers.reduce((sum, customer) => {
+      const integration = customer.cloudIntegrations?.[provider];
+      return sum + (integration?.resources || 0);
+    }, 0);
+  };
+
+  const getTotalSpend = (customers: any[], provider: string) => {
+    return customers.reduce((sum, customer) => {
+      const integration = customer.cloudIntegrations?.[provider];
+      return sum + (integration?.monthlySpend || 0);
+    }, 0);
+  };
   const cloudProviders = [
     {
       name: "Amazon Web Services",
