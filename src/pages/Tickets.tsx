@@ -2,178 +2,123 @@ import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
-  Ticket,
-  AlertTriangle,
-  ShoppingCart,
-  Bug,
-  ArrowUpDown,
-  Rocket,
-  Package,
+  Mail,
+  Monitor,
   FileText,
-  CreditCard,
-  FolderKanban,
-  UserMinus,
-  Map,
-  Users
+  ArrowRight
 } from "lucide-react";
 
-const TicketOption = ({ 
-  icon: Icon, 
-  title, 
-  description, 
-  color = "bg-primary"
-}: {
-  icon: any;
-  title: string;
-  description: string;
-  color?: string;
-}) => (
-  <Card className="hover:shadow-card-hover transition-all duration-200 cursor-pointer group">
-    <CardContent className="p-6">
-      <div className="flex items-start gap-4">
-        <div className={`w-12 h-12 ${color} rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform`}>
-          <Icon className="w-6 h-6" />
-        </div>
-        <div className="flex-1">
-          <h3 className="font-semibold text-foreground mb-1">{title}</h3>
-          <p className="text-sm text-muted-foreground">{description}</p>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-);
-
 const Tickets = () => {
-  const ticketOptions = [
-    {
-      icon: Ticket,
-      title: "Ticket",
-      description: "Report an issue",
-      color: "bg-red-500"
-    },
-    {
-      icon: ArrowUpDown,
-      title: "Changes",
-      description: "Request for change",
-      color: "bg-blue-500"
-    },
-    {
-      icon: CreditCard,
-      title: "Purchase Order",
-      description: "Create a purchase order",
-      color: "bg-gray-500"
-    },
-    {
-      icon: AlertTriangle,
-      title: "Major Incident",
-      description: "Report a major issue",
-      color: "bg-red-600"
-    },
-    {
-      icon: Rocket,
-      title: "Release",
-      description: "Create a release",
-      color: "bg-green-500"
-    },
-    {
-      icon: FolderKanban,
-      title: "Project",
-      description: "Create a project",
-      color: "bg-purple-500"
-    },
-    {
-      icon: ShoppingCart,
-      title: "Request",
-      description: "Request a service",
-      color: "bg-orange-500"
-    },
-    {
-      icon: Package,
-      title: "Asset",
-      description: "Create an asset",
-      color: "bg-amber-600"
-    },
-    {
-      icon: UserMinus,
-      title: "Offboarding Request",
-      description: "Offboard employees",
-      color: "bg-gray-600"
-    },
-    {
-      icon: Bug,
-      title: "Problem",
-      description: "Report a problem",
-      color: "bg-violet-500"
-    },
-    {
-      icon: FileText,
-      title: "Contract",
-      description: "Create a contract",
-      color: "bg-teal-500"
-    },
-    {
-      icon: Map,
-      title: "Journey Request",
-      description: "Initiate a journey request",
-      color: "bg-cyan-500"
-    },
-    {
-      icon: Users,
-      title: "Agents",
-      description: "Invite your team",
-      color: "bg-indigo-500"
-    }
-  ];
-
   return (
     <Layout>
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Service Desk</h1>
-          <p className="text-muted-foreground">
-            Create and manage tickets in your service desk
-          </p>
-        </div>
-
-        {/* Ticket Options Grid */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {ticketOptions.map((option, index) => (
-            <TicketOption
-              key={index}
-              icon={option.icon}
-              title={option.title}
-              description={option.description}
-              color={option.color}
-            />
-          ))}
-        </div>
-
-        {/* Call to Action */}
-        <div className="text-center py-8 border border-dashed border-border rounded-lg">
-          <div className="mb-4">
-            <svg
-              className="w-16 h-16 mx-auto text-muted-foreground"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1}
-                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-              />
-            </svg>
+      <div className="max-w-4xl mx-auto space-y-8">
+        {/* Illustration and Header */}
+        <div className="text-center py-12">
+          <div className="mb-6">
+            <div className="w-32 h-32 mx-auto mb-6 flex items-center justify-center">
+              <svg viewBox="0 0 200 150" className="w-full h-full">
+                {/* Person illustration */}
+                <g>
+                  {/* Body */}
+                  <path d="M100 90 Q90 85 85 95 L85 120 Q85 125 90 125 L110 125 Q115 125 115 120 L115 95 Q110 85 100 90" 
+                        fill="none" stroke="currentColor" strokeWidth="2"/>
+                  {/* Head */}
+                  <circle cx="100" cy="75" r="12" fill="none" stroke="currentColor" strokeWidth="2"/>
+                  {/* Hair */}
+                  <path d="M88 68 Q100 60 112 68" fill="none" stroke="currentColor" strokeWidth="2"/>
+                  {/* Arm pointing to bubble */}
+                  <path d="M115 95 Q125 90 135 95" fill="none" stroke="currentColor" strokeWidth="2"/>
+                </g>
+                
+                {/* Chat bubble */}
+                <circle cx="150" cy="85" r="25" fill="hsl(var(--primary))" opacity="0.9"/>
+                <path d="M135 95 Q140 105 145 95" fill="hsl(var(--primary))" opacity="0.9"/>
+                
+                {/* Chat icon inside bubble */}
+                <g transform="translate(150,85)" fill="white">
+                  <rect x="-8" y="-5" width="16" height="8" rx="2"/>
+                  <rect x="-6" y="-3" width="12" height="1"/>
+                  <rect x="-6" y="-1" width="8" height="1"/>
+                  <rect x="-6" y="1" width="10" height="1"/>
+                </g>
+              </svg>
+            </div>
           </div>
-          <h2 className="text-2xl font-bold mb-2">Create your first ticket</h2>
-          <p className="text-muted-foreground mb-4">
+          
+          <h1 className="text-2xl font-bold mb-2">Create your first ticket</h1>
+          <p className="text-muted-foreground">
             Create tickets in your service desk using the options below
           </p>
-          <Button size="lg">
-            <Ticket className="w-4 h-4 mr-2" />
-            Start Creating
-          </Button>
+        </div>
+
+        {/* Options Cards */}
+        <div className="grid gap-6 md:grid-cols-3">
+          <Card className="hover:shadow-card-hover transition-all duration-200 cursor-pointer group">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <Mail className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-semibold">Connect your support email</h3>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Convert your emails to service desk tickets
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-card-hover transition-all duration-200 cursor-pointer group">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <Monitor className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-semibold">Request from self-service portal</h3>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Raise a request for a service item
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-card-hover transition-all duration-200 cursor-pointer group">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-semibold">Create tickets manually</h3>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Add using a ticket form
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Get Started Link */}
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground">
+            or{" "}
+            <Button variant="link" className="text-primary p-0 h-auto font-normal text-sm">
+              Get started with sample data
+            </Button>
+          </p>
         </div>
       </div>
     </Layout>
