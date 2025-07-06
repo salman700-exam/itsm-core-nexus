@@ -10,6 +10,18 @@ import Customers from "./pages/Customers";
 import CreateTicket from "./pages/CreateTicket";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import Problems from "./pages/Problems";
+import Changes from "./pages/Changes";
+import Knowledge from "./pages/Knowledge";
+import Assets from "./pages/Assets";
+import Operations from "./pages/Operations";
+import SaaS from "./pages/SaaS";
+import Projects from "./pages/Projects";
+import Portfolio from "./pages/Portfolio";
+import Analytics from "./pages/Analytics";
+import Automation from "./pages/Automation";
+import Users from "./pages/Users";
+import Security from "./pages/Security";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +37,18 @@ const App = () => (
           <Route path="/tickets" element={<Tickets />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/problems" element={<Problems />} />
+          <Route path="/changes" element={<Changes />} />
+          <Route path="/knowledge" element={<Knowledge />} />
+          <Route path="/assets" element={<Assets />} />
+          <Route path="/operations" element={<Operations />} />
+          <Route path="/saas" element={<SaaS />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/automation" element={<Automation />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/security" element={<Security />} />
           <Route path="/create-ticket" element={<CreateTicket />} />
           <Route path="/create-change" element={<CreateTicket />} />
           <Route path="/create-purchase-order" element={<CreateTicket />} />
