@@ -52,6 +52,7 @@ const projectItems = [
 ];
 
 const adminItems = [
+  { title: "Monitoring", url: "/monitoring", icon: Monitor },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "Automation", url: "/automation", icon: Zap },
   { title: "Users & Teams", url: "/users", icon: Users },
