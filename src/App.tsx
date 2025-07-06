@@ -8,6 +8,7 @@ import Monitoring from "./pages/Monitoring";
 import Tickets from "./pages/Tickets";
 import Customers from "./pages/Customers";
 import CreateTicket from "./pages/CreateTicket";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/monitoring" element={<Monitoring />} />
           <Route path="/tickets" element={<Tickets />} />
           <Route path="/customers" element={<Customers />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/create-ticket" element={<CreateTicket />} />
           <Route path="/create-change" element={<CreateTicket />} />
           <Route path="/create-purchase-order" element={<CreateTicket />} />
