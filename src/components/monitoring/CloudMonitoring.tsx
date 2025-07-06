@@ -24,7 +24,9 @@ const CloudProvider = ({
   spend, 
   change, 
   resources, 
-  status 
+  status,
+  provider,
+  navigate
 }: {
   name: string;
   logo: string;
@@ -32,6 +34,8 @@ const CloudProvider = ({
   change: string;
   resources: number;
   status: "connected" | "warning" | "error";
+  provider: string;
+  navigate: (path: string) => void;
 }) => {
   const getStatusIcon = () => {
     switch (status) {
@@ -93,7 +97,7 @@ const CloudProvider = ({
         </div>
         
         <div className="pt-2 border-t border-border">
-          <Button variant="outline" size="sm" className="w-full">
+          <Button variant="outline" size="sm" className="w-full" onClick={() => navigate(`/monitoring/cloud/${provider}`)}>
             View Details
           </Button>
         </div>
@@ -191,34 +195,39 @@ export function CloudMonitoring() {
       return sum + (integration?.monthlySpend || 0);
     }, 0);
   };
+
   const cloudProviders = [
     {
       name: "Amazon Web Services",
       logo: "aws",
-      spend: "$12,450",
+      provider: "aws",
+      spend: `$${getTotalSpend(awsCustomers, 'aws').toLocaleString()}`,
       change: "+8.5%",
-      resources: 156,
+      resources: getTotalResources(awsCustomers, 'aws'),
       status: "connected" as const
     },
     {
       name: "Microsoft Azure",
       logo: "azure",
-      spend: "$8,320",
+      provider: "azure",
+      spend: `$${getTotalSpend(azureCustomers, 'azure').toLocaleString()}`,
       change: "-2.1%",
-      resources: 89,
+      resources: getTotalResources(azureCustomers, 'azure'),
       status: "connected" as const
     },
     {
       name: "Google Cloud Platform",
       logo: "gcp",
-      spend: "$5,670",
+      provider: "gcp",
+      spend: `$${getTotalSpend(gcpCustomers, 'gcp').toLocaleString()}`,
       change: "+15.3%",
-      resources: 67,
+      resources: getTotalResources(gcpCustomers, 'gcp'),
       status: "warning" as const
     },
     {
       name: "DigitalOcean",
       logo: "do",
+      provider: "digitalocean",
       spend: "$1,240",
       change: "+5.2%",
       resources: 23,
@@ -366,7 +375,7 @@ export function CloudMonitoring() {
         <h3 className="text-lg font-semibold mb-4">Cloud Providers</h3>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {cloudProviders.map((provider, index) => (
-            <CloudProvider key={index} {...provider} />
+            <CloudProvider key={index} {...provider} navigate={navigate} />
           ))}
         </div>
       </div>
@@ -395,7 +404,9 @@ export function CloudMonitoring() {
         <CardContent>
           <div className="grid gap-4 md:grid-cols-4">
             <div className="text-center">
-              <div className="text-2xl font-bold">$27,680</div>
+              <div className="text-2xl font-bold">
+                ${(getTotalSpend(awsCustomers, 'aws') + getTotalSpend(azureCustomers, 'azure') + getTotalSpend(gcpCustomers, 'gcp') + 1240).toLocaleString()}
+              </div>
               <div className="text-sm text-muted-foreground">Total Monthly Spend</div>
             </div>
             <div className="text-center">
@@ -407,7 +418,9 @@ export function CloudMonitoring() {
               <div className="text-sm text-muted-foreground">Budget Remaining</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold">335</div>
+              <div className="text-2xl font-bold">
+                {getTotalResources(awsCustomers, 'aws') + getTotalResources(azureCustomers, 'azure') + getTotalResources(gcpCustomers, 'gcp') + 23}
+              </div>
               <div className="text-sm text-muted-foreground">Total Resources</div>
             </div>
           </div>
