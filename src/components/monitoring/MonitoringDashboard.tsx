@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   Monitor, 
   Activity, 
@@ -19,7 +20,8 @@ import {
   Server,
   Cpu,
   HardDrive,
-  Wifi
+  Wifi,
+  UserCheck
 } from "lucide-react";
 import { InfrastructureMonitoring } from "./InfrastructureMonitoring";
 import { NetworkMonitoring } from "./NetworkMonitoring";
@@ -147,6 +149,7 @@ const ResourceStatus = ({
 
 export function MonitoringDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [selectedCustomer, setSelectedCustomer] = useState("all");
 
   const resources = [
     {
@@ -190,6 +193,19 @@ export function MonitoringDashboard() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Select value={selectedCustomer} onValueChange={setSelectedCustomer}>
+            <SelectTrigger className="w-48">
+              <UserCheck className="w-4 h-4 mr-2" />
+              <SelectValue placeholder="Select Customer" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Customers</SelectItem>
+              <SelectItem value="techcorp">TechCorp Inc</SelectItem>
+              <SelectItem value="digital">Digital Solutions</SelectItem>
+              <SelectItem value="cloudtech">CloudTech Ltd</SelectItem>
+              <SelectItem value="startup">StartupHub</SelectItem>
+            </SelectContent>
+          </Select>
           <Button variant="outline" size="sm">
             <Activity className="w-4 h-4 mr-2" />
             Live View
@@ -235,8 +251,9 @@ export function MonitoringDashboard() {
 
       {/* Monitoring Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="customers">Customers</TabsTrigger>
           <TabsTrigger value="infrastructure">Infrastructure</TabsTrigger>
           <TabsTrigger value="network">Network</TabsTrigger>
           <TabsTrigger value="application">APM</TabsTrigger>
@@ -372,6 +389,103 @@ export function MonitoringDashboard() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="customers" className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <UserCheck className="w-5 h-5" />
+                  TechCorp Inc
+                </CardTitle>
+                <CardDescription>
+                  15 resources monitored
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Uptime</span>
+                    <Badge variant="success">99.9%</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Active Alerts</span>
+                    <Badge variant="warning">2</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Response Time</span>
+                    <span className="text-sm font-medium">187ms</span>
+                  </div>
+                </div>
+                <Button variant="outline" className="w-full mt-4" size="sm">
+                  View Details
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <UserCheck className="w-5 h-5" />
+                  Digital Solutions
+                </CardTitle>
+                <CardDescription>
+                  23 resources monitored
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Uptime</span>
+                    <Badge variant="success">99.8%</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Active Alerts</span>
+                    <Badge variant="success">0</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Response Time</span>
+                    <span className="text-sm font-medium">134ms</span>
+                  </div>
+                </div>
+                <Button variant="outline" className="w-full mt-4" size="sm">
+                  View Details
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <UserCheck className="w-5 h-5" />
+                  CloudTech Ltd
+                </CardTitle>
+                <CardDescription>
+                  8 resources monitored
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Uptime</span>
+                    <Badge variant="warning">98.5%</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Active Alerts</span>
+                    <Badge variant="destructive">5</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Response Time</span>
+                    <span className="text-sm font-medium">312ms</span>
+                  </div>
+                </div>
+                <Button variant="outline" className="w-full mt-4" size="sm">
+                  View Details
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="infrastructure">

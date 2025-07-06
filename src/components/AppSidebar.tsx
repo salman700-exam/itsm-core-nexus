@@ -14,7 +14,8 @@ import {
   HelpCircle,
   Monitor,
   Database,
-  Globe
+  Globe,
+  UserCheck
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -33,8 +34,7 @@ import {
 
 const coreItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Incidents", url: "/incidents", icon: AlertTriangle },
-  { title: "Service Requests", url: "/requests", icon: Ticket },
+  { title: "Tickets", url: "/tickets", icon: Ticket },
   { title: "Problems", url: "/problems", icon: RefreshCw },
   { title: "Changes", url: "/changes", icon: FileText },
   { title: "Knowledge Base", url: "/knowledge", icon: HelpCircle },
@@ -56,6 +56,7 @@ const adminItems = [
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "Automation", url: "/automation", icon: Zap },
   { title: "Users & Teams", url: "/users", icon: Users },
+  { title: "Customers", url: "/customers", icon: UserCheck },
   { title: "Security", url: "/security", icon: Shield },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
