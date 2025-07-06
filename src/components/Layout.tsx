@@ -62,55 +62,55 @@ export function Layout({ children }: LayoutProps) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-ticket'}>
                     <Ticket className="w-4 h-4 mr-2" />
                     Ticket
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-change'}>
                     <ArrowUpDown className="w-4 h-4 mr-2" />
                     Change
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-purchase-order'}>
                     <CreditCard className="w-4 h-4 mr-2" />
                     Purchase Order
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-major-incident'}>
                     <AlertTriangle className="w-4 h-4 mr-2" />
                     Major Incident
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-release'}>
                     <Rocket className="w-4 h-4 mr-2" />
                     Release
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-project'}>
                     <FolderKanban className="w-4 h-4 mr-2" />
                     Project
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-request'}>
                     <ShoppingCart className="w-4 h-4 mr-2" />
                     Request
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-asset'}>
                     <Package className="w-4 h-4 mr-2" />
                     Asset
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-offboarding-request'}>
                     <UserMinus className="w-4 h-4 mr-2" />
                     Offboarding Request
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-problem'}>
                     <Bug className="w-4 h-4 mr-2" />
                     Problem
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-contract'}>
                     <FileText className="w-4 h-4 mr-2" />
                     Contract
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-journey-request'}>
                     <Map className="w-4 h-4 mr-2" />
                     Journey Request
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/create-agents'}>
                     <Users className="w-4 h-4 mr-2" />
                     Agents
                   </DropdownMenuItem>
