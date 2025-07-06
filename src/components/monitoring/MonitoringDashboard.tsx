@@ -29,6 +29,8 @@ import { ApplicationMonitoring } from "./ApplicationMonitoring";
 import { CloudMonitoring } from "./CloudMonitoring";
 import { LogMonitoring } from "./LogMonitoring";
 import { SyntheticMonitoring } from "./SyntheticMonitoring";
+import { WebsiteMonitoring } from "./WebsiteMonitoring";
+import { AutomationMonitoring } from "./AutomationMonitoring";
 
 const MetricCard = ({ 
   title, 
@@ -251,13 +253,15 @@ export function MonitoringDashboard() {
 
       {/* Monitoring Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-8">
+        <TabsList className="grid w-full grid-cols-10">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="customers">Customers</TabsTrigger>
           <TabsTrigger value="infrastructure">Infrastructure</TabsTrigger>
           <TabsTrigger value="network">Network</TabsTrigger>
           <TabsTrigger value="application">APM</TabsTrigger>
           <TabsTrigger value="cloud">Cloud</TabsTrigger>
+          <TabsTrigger value="website">Website</TabsTrigger>
+          <TabsTrigger value="automation">Automation</TabsTrigger>
           <TabsTrigger value="logs">Logs</TabsTrigger>
           <TabsTrigger value="synthetic">Synthetic</TabsTrigger>
         </TabsList>
@@ -502,6 +506,14 @@ export function MonitoringDashboard() {
 
         <TabsContent value="cloud">
           <CloudMonitoring />
+        </TabsContent>
+
+        <TabsContent value="website">
+          <WebsiteMonitoring />
+        </TabsContent>
+
+        <TabsContent value="automation">
+          <AutomationMonitoring />
         </TabsContent>
 
         <TabsContent value="logs">
