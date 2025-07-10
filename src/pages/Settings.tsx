@@ -56,34 +56,9 @@ export default function Settings() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold">Settings</h1>
-            <p className="text-muted-foreground">Manage account configurations and customizations for your service desk</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <Badge variant="destructive" className="text-sm">
-              <AlertCircle className="w-4 h-4 mr-1" />
-              14 days left in trial
-            </Badge>
-            <Button>Buy Freshservice</Button>
-            <Button variant="outline">Request demo</Button>
           </div>
         </div>
 
-        {/* Trial Notice */}
-        <Card className="border-orange-200 bg-orange-50">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5" />
-              <div>
-                <p className="font-medium text-orange-900">
-                  In Nov 2025, we'll be implementing multiple changes to improve Freshservice for you.
-                </p>
-                <p className="text-sm text-orange-700 mt-1">
-                  Review what's changing and take immediate action to avoid last-minute impacts.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Settings Sections */}
         <div className="grid gap-6">
