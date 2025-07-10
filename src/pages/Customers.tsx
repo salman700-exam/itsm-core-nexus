@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { useCustomers } from "@/contexts/CustomerContext";
+import { AddCustomerDialog } from "@/components/customers/AddCustomerDialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +26,7 @@ const CustomerCard = ({
   phone, 
   location, 
   status, 
-  joinDate 
+  join_date 
 }: {
   name: string;
   company: string;
@@ -33,7 +34,7 @@ const CustomerCard = ({
   phone: string;
   location: string;
   status: "active" | "inactive" | "pending";
-  joinDate: string;
+  join_date: string;
 }) => {
   const getStatusVariant = () => {
     switch (status) {
@@ -86,7 +87,7 @@ const CustomerCard = ({
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
             <Calendar className="w-4 h-4" />
-            <span>Joined {joinDate}</span>
+            <span>Joined {new Date(join_date).toLocaleDateString()}</span>
           </div>
         </div>
         <div className="flex gap-2 mt-4">
@@ -104,7 +105,7 @@ const CustomerCard = ({
 
 const Customers = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { customers } = useCustomers();
+  const { customers, loading, addCustomer, deleteCustomer } = useCustomers();
 
   return (
     <Layout>
@@ -117,10 +118,7 @@ const Customers = () => {
               Manage your customers and their service requests
             </p>
           </div>
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Customer
-          </Button>
+          <AddCustomerDialog />
         </div>
 
         {/* Stats Cards */}
@@ -192,9 +190,23 @@ const Customers = () => {
 
         {/* Customer Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {customers.map((customer, index) => (
-            <CustomerCard key={index} {...customer} />
-          ))}
+          {loading ? (
+            <div className="col-span-full text-center py-8">Loading customers...</div>
+          ) : customers.length === 0 ? (
+            <div className="col-span-full text-center py-8 text-muted-foreground">
+              No customers found. Click "Add Customer" to get started.
+            </div>
+          ) : (
+            customers
+              .filter(customer => 
+                customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                customer.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                customer.email.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((customer) => (
+                <CustomerCard key={customer.id} {...customer} />
+              ))
+          )}
         </div>
       </div>
     </Layout>

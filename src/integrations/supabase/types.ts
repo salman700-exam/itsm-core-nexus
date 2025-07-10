@@ -14,16 +14,652 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      analytics_reports: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: string
+          name: string
+          parameters: Json | null
+          schedule_config: Json | null
+          scheduled: boolean | null
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name: string
+          parameters?: Json | null
+          schedule_config?: Json | null
+          scheduled?: boolean | null
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name?: string
+          parameters?: Json | null
+          schedule_config?: Json | null
+          scheduled?: boolean | null
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_reports_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assets: {
+        Row: {
+          asset_tag: string | null
+          assigned_to: string | null
+          created_at: string | null
+          customer_id: string | null
+          id: string
+          location: string | null
+          manufacturer: string | null
+          model: string | null
+          name: string
+          purchase_cost: number | null
+          purchase_date: string | null
+          serial_number: string | null
+          status: Database["public"]["Enums"]["asset_status"] | null
+          type: Database["public"]["Enums"]["asset_type"]
+          updated_at: string | null
+          warranty_expiry: string | null
+        }
+        Insert: {
+          asset_tag?: string | null
+          assigned_to?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          id?: string
+          location?: string | null
+          manufacturer?: string | null
+          model?: string | null
+          name: string
+          purchase_cost?: number | null
+          purchase_date?: string | null
+          serial_number?: string | null
+          status?: Database["public"]["Enums"]["asset_status"] | null
+          type: Database["public"]["Enums"]["asset_type"]
+          updated_at?: string | null
+          warranty_expiry?: string | null
+        }
+        Update: {
+          asset_tag?: string | null
+          assigned_to?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          id?: string
+          location?: string | null
+          manufacturer?: string | null
+          model?: string | null
+          name?: string
+          purchase_cost?: number | null
+          purchase_date?: string | null
+          serial_number?: string | null
+          status?: Database["public"]["Enums"]["asset_status"] | null
+          type?: Database["public"]["Enums"]["asset_type"]
+          updated_at?: string | null
+          warranty_expiry?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assets_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assets_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automation_rules: {
+        Row: {
+          actions: Json | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          enabled: boolean | null
+          id: string
+          name: string
+          trigger_conditions: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          actions?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          enabled?: boolean | null
+          id?: string
+          name: string
+          trigger_conditions?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          actions?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          enabled?: boolean | null
+          id?: string
+          name?: string
+          trigger_conditions?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_rules_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cloud_integrations: {
+        Row: {
+          connected: boolean | null
+          created_at: string | null
+          customer_id: string | null
+          id: string
+          monthly_spend: number | null
+          provider: Database["public"]["Enums"]["cloud_provider"]
+          region: string | null
+          resources: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          connected?: boolean | null
+          created_at?: string | null
+          customer_id?: string | null
+          id?: string
+          monthly_spend?: number | null
+          provider: Database["public"]["Enums"]["cloud_provider"]
+          region?: string | null
+          resources?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          connected?: boolean | null
+          created_at?: string | null
+          customer_id?: string | null
+          id?: string
+          monthly_spend?: number | null
+          provider?: Database["public"]["Enums"]["cloud_provider"]
+          region?: string | null
+          resources?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cloud_integrations_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customers: {
+        Row: {
+          company: string
+          created_at: string | null
+          created_by: string | null
+          email: string
+          id: string
+          join_date: string | null
+          location: string | null
+          name: string
+          phone: string | null
+          status: Database["public"]["Enums"]["customer_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          company: string
+          created_at?: string | null
+          created_by?: string | null
+          email: string
+          id?: string
+          join_date?: string | null
+          location?: string | null
+          name: string
+          phone?: string | null
+          status?: Database["public"]["Enums"]["customer_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          company?: string
+          created_at?: string | null
+          created_by?: string | null
+          email?: string
+          id?: string
+          join_date?: string | null
+          location?: string | null
+          name?: string
+          phone?: string | null
+          status?: Database["public"]["Enums"]["customer_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          department: string | null
+          email: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          role: Database["public"]["Enums"]["user_role"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          department?: string | null
+          email: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          department?: string | null
+          email?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          budget: number | null
+          created_at: string | null
+          customer_id: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          manager_id: string | null
+          name: string
+          start_date: string | null
+          status: Database["public"]["Enums"]["project_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          budget?: number | null
+          created_at?: string | null
+          customer_id?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          manager_id?: string | null
+          name: string
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["project_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          budget?: number | null
+          created_at?: string | null
+          customer_id?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          manager_id?: string | null
+          name?: string
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["project_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "projects_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saas_applications: {
+        Row: {
+          created_at: string | null
+          id: string
+          license_count: number | null
+          manager_id: string | null
+          monthly_cost: number | null
+          name: string
+          renewal_date: string | null
+          status: string | null
+          updated_at: string | null
+          vendor: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          license_count?: number | null
+          manager_id?: string | null
+          monthly_cost?: number | null
+          name: string
+          renewal_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+          vendor?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          license_count?: number | null
+          manager_id?: string | null
+          monthly_cost?: number | null
+          name?: string
+          renewal_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+          vendor?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saas_applications_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_incidents: {
+        Row: {
+          assigned_to: string | null
+          created_at: string | null
+          description: string | null
+          detected_at: string | null
+          id: string
+          resolved_at: string | null
+          severity: Database["public"]["Enums"]["incident_severity"] | null
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string | null
+          description?: string | null
+          detected_at?: string | null
+          id?: string
+          resolved_at?: string | null
+          severity?: Database["public"]["Enums"]["incident_severity"] | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string | null
+          description?: string | null
+          detected_at?: string | null
+          id?: string
+          resolved_at?: string | null
+          severity?: Database["public"]["Enums"]["incident_severity"] | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_incidents_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      settings: {
+        Row: {
+          description: string | null
+          id: string
+          key: string
+          updated_at: string | null
+          updated_by: string | null
+          value: Json | null
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: Json | null
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "settings_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      teams: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          manager_id: string | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          manager_id?: string | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          manager_id?: string | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teams_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tickets: {
+        Row: {
+          assigned_to: string | null
+          created_at: string | null
+          created_by: string | null
+          customer_id: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          priority: Database["public"]["Enums"]["ticket_priority"] | null
+          resolved_at: string | null
+          status: Database["public"]["Enums"]["ticket_status"] | null
+          ticket_number: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          customer_id?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          priority?: Database["public"]["Enums"]["ticket_priority"] | null
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["ticket_status"] | null
+          ticket_number: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          customer_id?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          priority?: Database["public"]["Enums"]["ticket_priority"] | null
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["ticket_status"] | null
+          ticket_number?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tickets_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tickets_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tickets_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_teams: {
+        Row: {
+          created_at: string | null
+          id: string
+          team_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          team_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          team_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_teams_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_teams_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_ticket_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_user_role: {
+        Args: { user_id: string }
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
     }
     Enums: {
-      [_ in never]: never
+      asset_status: "active" | "inactive" | "maintenance" | "retired"
+      asset_type: "hardware" | "software" | "network" | "mobile" | "cloud"
+      cloud_provider: "aws" | "azure" | "gcp"
+      customer_status: "active" | "inactive" | "pending"
+      incident_severity: "low" | "medium" | "high" | "critical"
+      project_status:
+        | "planning"
+        | "active"
+        | "on-hold"
+        | "completed"
+        | "cancelled"
+      ticket_priority: "low" | "medium" | "high" | "critical"
+      ticket_status: "open" | "in-progress" | "resolved" | "closed"
+      user_role: "admin" | "manager" | "agent" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +786,22 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      asset_status: ["active", "inactive", "maintenance", "retired"],
+      asset_type: ["hardware", "software", "network", "mobile", "cloud"],
+      cloud_provider: ["aws", "azure", "gcp"],
+      customer_status: ["active", "inactive", "pending"],
+      incident_severity: ["low", "medium", "high", "critical"],
+      project_status: [
+        "planning",
+        "active",
+        "on-hold",
+        "completed",
+        "cancelled",
+      ],
+      ticket_priority: ["low", "medium", "high", "critical"],
+      ticket_status: ["open", "in-progress", "resolved", "closed"],
+      user_role: ["admin", "manager", "agent", "user"],
+    },
   },
 } as const

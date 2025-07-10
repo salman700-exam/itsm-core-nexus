@@ -29,30 +29,42 @@ export function CloudProviderDetails() {
           name: 'Amazon Web Services',
           icon: <Cloud className="w-6 h-6 text-orange-500" />,
           color: 'text-orange-500',
-          totalResources: providerCustomers.reduce((sum, customer) => 
-            sum + (customer.cloudIntegrations?.aws?.resources || 0), 0),
-          totalSpend: providerCustomers.reduce((sum, customer) => 
-            sum + (customer.cloudIntegrations?.aws?.monthlySpend || 0), 0)
+          totalResources: providerCustomers.reduce((sum, customer) => {
+            const integration = customer.cloudIntegrations?.find(i => i.provider === 'aws');
+            return sum + (integration?.resources || 0);
+          }, 0),
+          totalSpend: providerCustomers.reduce((sum, customer) => {
+            const integration = customer.cloudIntegrations?.find(i => i.provider === 'aws');
+            return sum + (integration?.monthly_spend || 0);
+          }, 0)
         };
       case 'azure':
         return {
           name: 'Microsoft Azure',
           icon: <Cloud className="w-6 h-6 text-blue-500" />,
           color: 'text-blue-500',
-          totalResources: providerCustomers.reduce((sum, customer) => 
-            sum + (customer.cloudIntegrations?.azure?.resources || 0), 0),
-          totalSpend: providerCustomers.reduce((sum, customer) => 
-            sum + (customer.cloudIntegrations?.azure?.monthlySpend || 0), 0)
+          totalResources: providerCustomers.reduce((sum, customer) => {
+            const integration = customer.cloudIntegrations?.find(i => i.provider === 'azure');
+            return sum + (integration?.resources || 0);
+          }, 0),
+          totalSpend: providerCustomers.reduce((sum, customer) => {
+            const integration = customer.cloudIntegrations?.find(i => i.provider === 'azure');
+            return sum + (integration?.monthly_spend || 0);
+          }, 0)
         };
       case 'gcp':
         return {
           name: 'Google Cloud Platform',
           icon: <Cloud className="w-6 h-6 text-green-500" />,
           color: 'text-green-500',
-          totalResources: providerCustomers.reduce((sum, customer) => 
-            sum + (customer.cloudIntegrations?.gcp?.resources || 0), 0),
-          totalSpend: providerCustomers.reduce((sum, customer) => 
-            sum + (customer.cloudIntegrations?.gcp?.monthlySpend || 0), 0)
+          totalResources: providerCustomers.reduce((sum, customer) => {
+            const integration = customer.cloudIntegrations?.find(i => i.provider === 'gcp');
+            return sum + (integration?.resources || 0);
+          }, 0),
+          totalSpend: providerCustomers.reduce((sum, customer) => {
+            const integration = customer.cloudIntegrations?.find(i => i.provider === 'gcp');
+            return sum + (integration?.monthly_spend || 0);
+          }, 0)
         };
       default:
         return {
@@ -158,7 +170,7 @@ export function CloudProviderDetails() {
         <CardContent>
           <div className="space-y-4">
             {providerCustomers.map((customer) => {
-              const integration = customer.cloudIntegrations?.[provider as keyof typeof customer.cloudIntegrations] as any;
+              const integration = customer.cloudIntegrations?.find(i => i.provider === provider);
               
               return (
                 <div key={customer.id} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors">
@@ -190,7 +202,7 @@ export function CloudProviderDetails() {
                   </div>
                   <div className="text-right">
                     <div className="text-lg font-semibold">
-                      ${(integration?.monthlySpend || 0).toLocaleString()}
+                      ${(integration?.monthly_spend || 0).toLocaleString()}
                     </div>
                     <div className="text-xs text-muted-foreground">monthly spend</div>
                     <div className="flex items-center gap-2 mt-2">
@@ -226,16 +238,16 @@ export function CloudProviderDetails() {
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {Array.from(new Set(providerCustomers.map(c => {
-              const integration = c.cloudIntegrations?.[provider as keyof typeof c.cloudIntegrations] as any;
+              const integration = c.cloudIntegrations?.find(i => i.provider === provider);
               return integration?.region;
             }).filter(Boolean))).map((region) => {
               const regionCustomers = providerCustomers.filter(c => {
-                const integration = c.cloudIntegrations?.[provider as keyof typeof c.cloudIntegrations] as any;
+                const integration = c.cloudIntegrations?.find(i => i.provider === provider);
                 return integration?.region === region;
               });
               const regionSpend = regionCustomers.reduce((sum, c) => {
-                const integration = c.cloudIntegrations?.[provider as keyof typeof c.cloudIntegrations] as any;
-                return sum + (integration?.monthlySpend || 0);
+                const integration = c.cloudIntegrations?.find(i => i.provider === provider);
+                return sum + (integration?.monthly_spend || 0);
               }, 0);
 
               return (

@@ -1,4 +1,15 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+export interface CloudIntegration {
+  id: string;
+  customer_id: string;
+  provider: 'aws' | 'azure' | 'gcp';
+  connected: boolean;
+  resources: number;
+  monthly_spend: number;
+  region: string;
+}
 
 export interface Customer {
   id: string;
@@ -8,40 +19,19 @@ export interface Customer {
   phone: string;
   location: string;
   status: "active" | "inactive" | "pending";
-  joinDate: string;
-  cloudIntegrations?: {
-    aws?: {
-      connected: boolean;
-      resources: number;
-      monthlySpend: number;
-      region: string;
-    };
-    azure?: {
-      connected: boolean;
-      resources: number;
-      monthlySpend: number;
-      region: string;
-    };
-    gcp?: {
-      connected: boolean;
-      resources: number;
-      monthlySpend: number;
-      region: string;
-    };
-    onPremises?: {
-      connected: boolean;
-      servers: number;
-      devices: number;
-    };
-  };
+  join_date: string;
+  cloudIntegrations?: CloudIntegration[];
 }
 
 interface CustomerContextType {
   customers: Customer[];
-  addCustomer: (customer: Omit<Customer, 'id'>) => void;
-  updateCustomer: (id: string, updates: Partial<Customer>) => void;
+  loading: boolean;
+  addCustomer: (customer: Omit<Customer, 'id' | 'join_date'>) => Promise<void>;
+  updateCustomer: (id: string, updates: Partial<Customer>) => Promise<void>;
+  deleteCustomer: (id: string) => Promise<void>;
   getCustomerById: (id: string) => Customer | undefined;
   getCustomersByCloudProvider: (provider: 'aws' | 'azure' | 'gcp') => Customer[];
+  refreshCustomers: () => Promise<void>;
 }
 
 const CustomerContext = createContext<CustomerContextType | undefined>(undefined);
@@ -55,110 +45,92 @@ export const useCustomers = () => {
 };
 
 export const CustomerProvider = ({ children }: { children: ReactNode }) => {
-  const [customers, setCustomers] = useState<Customer[]>([
-    {
-      id: "1",
-      name: "John Smith",
-      company: "TechCorp Inc",
-      email: "john.smith@techcorp.com",
-      phone: "+1 (555) 123-4567",
-      location: "New York, NY",
-      status: "active",
-      joinDate: "Jan 2024",
-      cloudIntegrations: {
-        aws: {
-          connected: true,
-          resources: 45,
-          monthlySpend: 3200,
-          region: "us-east-1"
-        },
-        azure: {
-          connected: true,
-          resources: 23,
-          monthlySpend: 1800,
-          region: "eastus"
-        }
-      }
-    },
-    {
-      id: "2",
-      name: "Sarah Johnson",
-      company: "Digital Solutions",
-      email: "sarah@digitalsol.com",
-      phone: "+1 (555) 987-6543",
-      location: "San Francisco, CA",
-      status: "active",
-      joinDate: "Feb 2024",
-      cloudIntegrations: {
-        aws: {
-          connected: true,
-          resources: 67,
-          monthlySpend: 4500,
-          region: "us-west-2"
-        },
-        gcp: {
-          connected: true,
-          resources: 34,
-          monthlySpend: 2100,
-          region: "us-central1"
-        }
-      }
-    },
-    {
-      id: "3",
-      name: "Mike Davis",
-      company: "CloudTech Ltd",
-      email: "mike.davis@cloudtech.com",
-      phone: "+1 (555) 456-7890",
-      location: "Austin, TX",
-      status: "pending",
-      joinDate: "Mar 2024",
-      cloudIntegrations: {
-        azure: {
-          connected: true,
-          resources: 29,
-          monthlySpend: 2200,
-          region: "southcentralus"
-        },
-        onPremises: {
-          connected: true,
-          servers: 12,
-          devices: 45
-        }
-      }
-    },
-    {
-      id: "4",
-      name: "Emily Wilson",
-      company: "StartupHub",
-      email: "emily@startuphub.io",
-      phone: "+1 (555) 321-0987",
-      location: "Seattle, WA",
-      status: "inactive",
-      joinDate: "Dec 2023",
-      cloudIntegrations: {
-        gcp: {
-          connected: true,
-          resources: 18,
-          monthlySpend: 950,
-          region: "us-west1"
-        }
-      }
-    }
-  ]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const addCustomer = (customerData: Omit<Customer, 'id'>) => {
-    const newCustomer: Customer = {
-      ...customerData,
-      id: Date.now().toString(),
-    };
-    setCustomers(prev => [...prev, newCustomer]);
+  const fetchCustomers = async () => {
+    try {
+      const { data: customersData, error: customersError } = await supabase
+        .from('customers')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (customersError) throw customersError;
+
+      const { data: integrationsData, error: integrationsError } = await supabase
+        .from('cloud_integrations')
+        .select('*');
+
+      if (integrationsError) throw integrationsError;
+
+      const customersWithIntegrations = customersData?.map(customer => ({
+        ...customer,
+        cloudIntegrations: integrationsData?.filter(integration => 
+          integration.customer_id === customer.id
+        ) || []
+      })) || [];
+
+      setCustomers(customersWithIntegrations);
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateCustomer = (id: string, updates: Partial<Customer>) => {
-    setCustomers(prev => prev.map(customer => 
-      customer.id === id ? { ...customer, ...updates } : customer
-    ));
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
+
+  const addCustomer = async (customerData: Omit<Customer, 'id' | 'join_date'>) => {
+    try {
+      const { data, error } = await supabase
+        .from('customers')
+        .insert([customerData])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setCustomers(prev => [data, ...prev]);
+    } catch (error) {
+      console.error('Error adding customer:', error);
+      throw error;
+    }
+  };
+
+  const updateCustomer = async (id: string, updates: Partial<Customer>) => {
+    try {
+      const { error } = await supabase
+        .from('customers')
+        .update(updates)
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setCustomers(prev => prev.map(customer => 
+        customer.id === id ? { ...customer, ...updates } : customer
+      ));
+    } catch (error) {
+      console.error('Error updating customer:', error);
+      throw error;
+    }
+  };
+
+  const deleteCustomer = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('customers')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setCustomers(prev => prev.filter(customer => customer.id !== id));
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+      throw error;
+    }
   };
 
   const getCustomerById = (id: string) => {
@@ -167,17 +139,26 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
 
   const getCustomersByCloudProvider = (provider: 'aws' | 'azure' | 'gcp') => {
     return customers.filter(customer => 
-      customer.cloudIntegrations?.[provider]?.connected
+      customer.cloudIntegrations?.some(integration => 
+        integration.provider === provider && integration.connected
+      )
     );
+  };
+
+  const refreshCustomers = async () => {
+    await fetchCustomers();
   };
 
   return (
     <CustomerContext.Provider value={{
       customers,
+      loading,
       addCustomer,
       updateCustomer,
+      deleteCustomer,
       getCustomerById,
-      getCustomersByCloudProvider
+      getCustomersByCloudProvider,
+      refreshCustomers
     }}>
       {children}
     </CustomerContext.Provider>
