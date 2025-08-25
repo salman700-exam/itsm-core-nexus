@@ -8,12 +8,34 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Paperclip, Calendar } from "lucide-react";
+import { useTickets } from "@/contexts/TicketContext";
+import { useCustomers } from "@/contexts/CustomerContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const CreateTicket = () => {
   const form = useForm();
+  const { createTicket } = useTickets();
+  const { customers } = useCustomers();
+  const navigate = useNavigate();
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: any) => {
+    try {
+      await createTicket({
+        title: data.shortDescription || data.description?.substring(0, 50) || 'New Ticket',
+        description: data.description,
+        priority: data.priority || 'medium',
+        status: 'open',
+        customer_id: data.requester,
+        due_date: data.dueDate || null,
+        assigned_to: data.assignedTo || null
+      });
+      
+      toast.success('Ticket created successfully!');
+      navigate('/tickets');
+    } catch (error) {
+      console.error('Error creating ticket:', error);
+    }
   };
 
   return (
@@ -39,13 +61,16 @@ const CreateTicket = () => {
                       <FormItem>
                         <FormLabel>Requester</FormLabel>
                         <FormControl>
-                          <Select>
+                          <Select onValueChange={field.onChange}>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select requester" />
+                              <SelectValue placeholder="Select customer" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="user1">John Doe</SelectItem>
-                              <SelectItem value="user2">Jane Smith</SelectItem>
+                              {customers.map((customer) => (
+                                <SelectItem key={customer.id} value={customer.id}>
+                                  {customer.name} - {customer.company}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         </FormControl>
@@ -84,7 +109,7 @@ const CreateTicket = () => {
                       <FormItem>
                         <FormLabel>Priority</FormLabel>
                         <FormControl>
-                          <Select>
+                          <Select onValueChange={field.onChange} defaultValue="medium">
                             <SelectTrigger>
                               <SelectValue placeholder="Select priority" />
                             </SelectTrigger>

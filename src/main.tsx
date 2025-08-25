@@ -9,11 +9,15 @@ import { AuthProvider } from "./hooks/useAuth";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <CustomerProvider>
+  <AuthProvider>
+    <CustomerProvider>
+      <TicketProvider>
+        <CloudIntegrationProvider>
           <App />
-        </CustomerProvider>
-      </AuthProvider>
+        </CloudIntegrationProvider>
+      </TicketProvider>
+    </CustomerProvider>
+  </AuthProvider>
     </BrowserRouter>
   </StrictMode>
 );

@@ -1,14 +1,107 @@
 import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { TicketList } from "@/components/tickets/TicketList";
+import { useTickets } from "@/contexts/TicketContext";
+import { useNavigate } from "react-router-dom";
 import { 
   Mail,
   Monitor,
   FileText,
-  ArrowRight
+  ArrowRight,
+  Plus,
+  TicketIcon,
+  Clock,
+  CheckCircle2,
+  AlertTriangle
 } from "lucide-react";
 
 const Tickets = () => {
+  const { tickets } = useTickets();
+  const navigate = useNavigate();
+
+  const openTickets = tickets.filter(t => t.status === 'open').length;
+  const inProgressTickets = tickets.filter(t => t.status === 'in-progress').length;
+  const resolvedTickets = tickets.filter(t => t.status === 'resolved').length;
+
+  // Show list view if there are tickets, otherwise show the getting started view
+  if (tickets.length > 0) {
+    return (
+      <Layout>
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Service Tickets</h1>
+              <p className="text-muted-foreground">
+                Manage and track your support tickets
+              </p>
+            </div>
+            <Button onClick={() => navigate('/create-ticket')}>
+              <Plus className="w-4 h-4 mr-2" />
+              Create Ticket
+            </Button>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Tickets</CardTitle>
+                <TicketIcon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{tickets.length}</div>
+                <p className="text-xs text-muted-foreground">
+                  All time tickets
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Open Tickets</CardTitle>
+                <Clock className="h-4 w-4 text-blue-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{openTickets}</div>
+                <p className="text-xs text-muted-foreground">
+                  Awaiting response
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">In Progress</CardTitle>
+                <AlertTriangle className="h-4 w-4 text-yellow-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{inProgressTickets}</div>
+                <p className="text-xs text-muted-foreground">
+                  Being worked on
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Resolved</CardTitle>
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{resolvedTickets}</div>
+                <p className="text-xs text-muted-foreground">
+                  Successfully resolved
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Ticket List */}
+          <TicketList />
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <div className="max-w-4xl mx-auto space-y-8">
@@ -53,6 +146,26 @@ const Tickets = () => {
 
         {/* Options Cards */}
         <div className="grid gap-6 md:grid-cols-3">
+          <Card className="hover:shadow-card-hover transition-all duration-200 cursor-pointer group" 
+                onClick={() => navigate('/create-ticket')}>
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-semibold">Create tickets manually</h3>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Add using a ticket form
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <Card className="hover:shadow-card-hover transition-all duration-200 cursor-pointer group">
             <CardContent className="p-6">
               <div className="flex items-start gap-4">
@@ -90,35 +203,6 @@ const Tickets = () => {
               </div>
             </CardContent>
           </Card>
-
-          <Card className="hover:shadow-card-hover transition-all duration-200 cursor-pointer group">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                  <FileText className="w-6 h-6" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-semibold">Create tickets manually</h3>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Add using a ticket form
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Get Started Link */}
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground">
-            or{" "}
-            <Button variant="link" className="text-primary p-0 h-auto font-normal text-sm">
-              Get started with sample data
-            </Button>
-          </p>
         </div>
       </div>
     </Layout>

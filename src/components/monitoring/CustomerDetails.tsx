@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { useCustomers } from "@/contexts/CustomerContext";
+import { useCloudIntegration } from "@/contexts/CloudIntegrationContext";
+import { CloudIntegrationDialog } from "@/components/integrations/CloudIntegrationDialog";
 import { 
   ArrowLeft,
   Cloud,
@@ -23,9 +25,11 @@ import {
 export function CustomerDetails() {
   const { customerId } = useParams();
   const navigate = useNavigate();
-  const { getCustomerById, updateCustomer } = useCustomers();
+  const { getCustomerById } = useCustomers();
+  const { getCustomerIntegrations, disconnectProvider } = useCloudIntegration();
   
   const customer = getCustomerById(customerId!);
+  const integrations = getCustomerIntegrations(customerId!);
 
   if (!customer) {
     return (
@@ -42,19 +46,23 @@ export function CustomerDetails() {
   }
 
   const getIntegration = (provider: 'aws' | 'azure' | 'gcp') => {
-    return customer.cloudIntegrations?.find(i => i.provider === provider);
+    return integrations.find(i => i.provider === provider);
   };
 
   const handleToggleIntegration = async (provider: 'aws' | 'azure' | 'gcp', enabled: boolean) => {
-    // This would typically be handled by a more sophisticated cloud integration management system
-    console.log(`Toggle ${provider} integration for customer ${customer.id}: ${enabled}`);
+    const integration = getIntegration(provider);
+    if (integration && !enabled) {
+      await disconnectProvider(integration.id);
+    }
   };
 
-  const totalMonthlySpend = customer.cloudIntegrations?.reduce((sum, integration) => 
-    sum + (integration.monthly_spend || 0), 0) || 0;
+  const totalMonthlySpend = integrations.reduce((sum, integration) => 
+    sum + (integration.monthly_spend || 0), 0);
 
-  const totalResources = customer.cloudIntegrations?.reduce((sum, integration) => 
-    sum + (integration.resources || 0), 0) || 0;
+  const totalResources = integrations.reduce((sum, integration) => 
+    sum + (integration.resources || 0), 0);
+
+  const activeIntegrations = integrations.filter(i => i.connected).length;
 
   return (
     <div className="space-y-6">
@@ -169,7 +177,7 @@ export function CustomerDetails() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {customer.cloudIntegrations?.filter(i => i.connected).length || 0}
+              {activeIntegrations}
             </div>
             <p className="text-xs text-muted-foreground">
               Cloud providers connected
@@ -202,10 +210,19 @@ export function CustomerDetails() {
                 <CardDescription>AWS cloud infrastructure and services</CardDescription>
               </div>
             </div>
-            <Switch 
-              checked={getIntegration('aws')?.connected || false}
-              onCheckedChange={(checked) => handleToggleIntegration('aws', checked)}
-            />
+            <div className="flex items-center gap-2">
+              <Switch 
+                checked={getIntegration('aws')?.connected || false}
+                onCheckedChange={(checked) => handleToggleIntegration('aws', checked)}
+              />
+              {!getIntegration('aws')?.connected && (
+                <CloudIntegrationDialog 
+                  customerId={customer.id}
+                  customerName={customer.company}
+                  trigger={<Button size="sm">Connect</Button>}
+                />
+              )}
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -249,10 +266,19 @@ export function CustomerDetails() {
                 <CardDescription>Azure cloud platform and services</CardDescription>
               </div>
             </div>
-            <Switch 
-              checked={getIntegration('azure')?.connected || false}
-              onCheckedChange={(checked) => handleToggleIntegration('azure', checked)}
-            />
+            <div className="flex items-center gap-2">
+              <Switch 
+                checked={getIntegration('azure')?.connected || false}
+                onCheckedChange={(checked) => handleToggleIntegration('azure', checked)}
+              />
+              {!getIntegration('azure')?.connected && (
+                <CloudIntegrationDialog 
+                  customerId={customer.id}
+                  customerName={customer.company}
+                  trigger={<Button size="sm">Connect</Button>}
+                />
+              )}
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -296,10 +322,19 @@ export function CustomerDetails() {
                 <CardDescription>GCP services and infrastructure</CardDescription>
               </div>
             </div>
-            <Switch 
-              checked={getIntegration('gcp')?.connected || false}
-              onCheckedChange={(checked) => handleToggleIntegration('gcp', checked)}
-            />
+            <div className="flex items-center gap-2">
+              <Switch 
+                checked={getIntegration('gcp')?.connected || false}
+                onCheckedChange={(checked) => handleToggleIntegration('gcp', checked)}
+              />
+              {!getIntegration('gcp')?.connected && (
+                <CloudIntegrationDialog 
+                  customerId={customer.id}
+                  customerName={customer.company}
+                  trigger={<Button size="sm">Connect</Button>}
+                />
+              )}
+            </div>
           </div>
         </CardHeader>
         <CardContent>
