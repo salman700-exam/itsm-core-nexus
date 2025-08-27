@@ -11,15 +11,15 @@ import { CloudIntegrationProvider } from "./contexts/CloudIntegrationContext";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-  <AuthProvider>
-    <CustomerProvider>
-      <TicketProvider>
-        <CloudIntegrationProvider>
-          <App />
-        </CloudIntegrationProvider>
-      </TicketProvider>
-    </CustomerProvider>
-  </AuthProvider>
+      <AuthProvider>
+        <CustomerProvider>
+          <TicketProvider>
+            <CloudIntegrationProvider>
+              <App />
+            </CloudIntegrationProvider>
+          </TicketProvider>
+        </CustomerProvider>
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>
 );
