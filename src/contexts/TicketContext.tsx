@@ -68,16 +68,25 @@ export const TicketProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [user]);
 
+  const generateTicketNumber = () => {
+    const date = new Date().toISOString().slice(0,10).replace(/-/g, '');
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    return `TKT-${date}-${rand}`;
+  };
+
   const createTicket = async (ticketData: Omit<Ticket, 'id' | 'ticket_number' | 'created_at' | 'updated_at'>) => {
     try {
+      const payload = {
+        ...ticketData,
+        created_by: user?.id,
+        status: ticketData.status || 'open',
+        ticket_number: generateTicketNumber(),
+      };
+
       const { data, error } = await supabase
         .from('tickets')
-        .insert([{
-          ...ticketData,
-          created_by: user?.id,
-          status: ticketData.status || 'open'
-        }])
-        .select()
+        .insert([payload])
+        .select('*')
         .single();
 
       if (error) throw error;
